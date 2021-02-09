@@ -147,13 +147,19 @@ const _ = {
 	},
 
 	invert(objectIn) {
+		/*
+			I still don't understand objects as well as I'd like.
+			This function was hard, but I think this is where
+			I've started getting some traction.
+		*/
+		
 		//console.log(objectIn);
 		let invObject = {};
 		
 		for (let key in objectIn) {
 			//console.log(`objectIn: ${key} : ${objectIn[key]}`)
 			
-			let originalValue = objectIn[key]
+			let originalValue = objectIn[key];
 			//console.log(`originalValue: ${originalValue}`)
 
 			invObject[originalValue] = key;
@@ -161,6 +167,25 @@ const _ = {
 		
 		//console.log(invObject)
 		return invObject;
+	},
+
+	findKey(objIn, predFunc){
+		//console.log(objIn);
+		//console.log(predFunc);
+
+		for (let key in objIn){
+			let value = objIn[key];
+			let predicateReturn = predFunc(value);
+			//console.log(key);
+			//console.log(value);
+			//console.log(predicateReturn);
+			
+			if (predicateReturn){
+				//console.log(`I'm true!`)
+				return key;
+			}
+		}
+		return undefined;
 	},
 };
 
