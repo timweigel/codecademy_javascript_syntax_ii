@@ -187,6 +187,73 @@ const _ = {
 		}
 		return undefined;
 	},
+
+	drop(arrayIn, numDrop) {
+		let newArray = [];
+		
+		if (numDrop === undefined) {
+			numDrop = 1;
+		}
+		
+		newArray = arrayIn.slice(numDrop);
+
+		return newArray;
+
+	},
+
+	dropWhile(arrayIn, predFunc){
+		//console.log(arrayIn);
+
+		let newArray = [];
+		
+		/*
+			I found the wording in the problem to be
+			frustrating, thus my choice of name in the
+			test code below.
+
+			Note that this is not an unrealistic or
+			uncommon scenario in the real world.
+		*/
+
+		/*
+		let argh = function (index, element) {
+			return !predFunc(index, element, arrayIn)
+		};
+		*/
+
+		//let dropNum = arrayIn.findIndex(argh);
+		
+		/*
+			Moving the anonymous callback function inside the
+			findIndex() call, for Reasons, I'm Sure.
+		*/
+		
+		let dropNum = arrayIn.findIndex(
+			function (index, element) {
+				return !predFunc(index, element, arrayIn)
+			}
+		);
+		
+		//console.log(dropNum);
+
+		newArray = this.drop(arrayIn, dropNum);
+		//console.log(newArray);
+		
+		return newArray;
+	},
+
+	chunk(arrayIn, size) {
+		console.log(arrayIn);
+		console.log(size);
+
+		if (size === undefined) {
+			size = 1;
+		};
+
+		let newArray = [];
+
+		return newArray;
+	}
 };
 
 // Do not write or modify code below this line.
