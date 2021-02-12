@@ -243,15 +243,29 @@ const _ = {
 	},
 
 	chunk(arrayIn, size) {
-		console.log(arrayIn);
-		console.log(size);
-
+		//console.log(arrayIn);
+		//console.log(size);
+		
+		let newArray = [];
+		
 		if (size === undefined) {
 			size = 1;
 		};
+		
+		/*
+			Can it be I've found a more compact method
+			than the provided solution? No need to chunk
+			the current array up! We can just push the
+			chunks in directly!
 
-		let newArray = [];
-
+			If we needed to do stuff with the chunks
+			it may well be cognitively 
+		*/
+		for (i = 0; i < arrayIn.length; i += size) {
+			newArray.push(arrayIn.slice(i, i + size));
+		}
+		//console.log(newArray);
+		
 		return newArray;
 	}
 };
