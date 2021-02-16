@@ -72,8 +72,8 @@ const returnRandBase = () => {
 		  },
 		  
 		  compareDNA(orgForCompare) {
-			  const origStrandLength = this._dna.length;
-			  const compareStrandLength = orgForCompare.dna.length;
+			  let origStrandLength = this._dna.length;
+			  let compareStrandLength = orgForCompare.dna.length;
 			  let matchCount = 0;
 			  let percentCommon;
   
@@ -101,6 +101,38 @@ const returnRandBase = () => {
 			  return;
 		  },
   
+		  /*
+			  Added to support the findRelatives function below. Returns an array with
+			  the specimen numbers and percentage of matching DNA
+		  */
+		  compareDNA2(orgForCompare) {
+			  let origStrandLength = this._dna.length;
+			  let compareStrandLength = orgForCompare.dna.length;
+			  let matchCount = 0;
+			  let percentCommon;
+			  let returnArray = [];
+  
+			  if (origStrandLength !== compareStrandLength) {
+				  console.log(`DNA strand lengths do not match!`)
+			  } else {
+  
+				  for (i = 0; i < origStrandLength; i++) {
+					  if (orgForCompare.dna[i] === this._dna[i]) {
+						  matchCount++;
+					  }
+				  }
+  
+				  // Not rounding this time - may need more precision to identify matches
+				  percentCommon = ((matchCount/origStrandLength) * 100);
+				  returnArray.push(this.specimenNum, orgForCompare.specimenNum, percentCommon);
+  
+				  console.log(returnArray);
+				  //console.log(`specimen #${this._specimenNum} and specimen #${orgForCompare.specimenNum} have ${percentCommon}% DNA in common`)
+			  }	
+  
+			  return returnArray;
+		  },
+  
 		  willLikelySurvive() {
 			  const strandLength = this._dna.length;
 			  let baseCount = 0;
@@ -117,6 +149,25 @@ const returnRandBase = () => {
 				  return false;
 			  }
 		  },
+  
+		  complementStrand() {
+			  let newStrand = [];
+  
+			  for(i = 0; i < this._dna.length; i++) {
+				  if (this._dna[i] === 'A') {
+					  newStrand.push('T')
+				  } else if (this._dna[i] === 'T') {
+					  newStrand.push('A')
+				  } else if (this._dna[i] === 'G') {
+					  newStrand.push('C')
+				  } else {
+					  newStrand.push('G')
+				  }
+			  }
+  
+			  return newStrand;
+		  },
+  
 	  }
   
 	  return organism;
@@ -130,6 +181,7 @@ const returnRandBase = () => {
   }
   */
   
+  /*
   // make 30 that will survive:
   let survivorOrgs = []
   let contendCounter = 1;
@@ -143,9 +195,83 @@ const returnRandBase = () => {
   
 	  contendCounter++;
   }
+  */
   
   /*
+	  // make an arbitrary number of surviving organisms
+	  I'm doing this to make it easy to generate an arbitrary
+	  set of survivors so I can test findRelatives
+  */
+  function makeSurvivors(numToMake) {
+	  let survivorOrgs = []
+	  let contendCounter = 1;
+  
+	  while (survivorOrgs.length < numToMake) {
+		  let contenderOrg = pAequorFactory(contendCounter, mockUpStrand());
+		  //console.log(`contender ${contendCounter} - go! survive: ${contenderOrg.willLikelySurvive()}`)
+		  if (contenderOrg.willLikelySurvive()) {
+			  survivorOrgs.push(contenderOrg);
+		  }
+  
+		  contendCounter++;
+	  }
+  
+	  return survivorOrgs;
+  }
+  
+  // try to find most related
+  /*
+	  I'm going to store the match percentage and the specimen numbers compared as arrays 
+	  (format: [specimen ID 1, specimen ID 2, match %] in	an array.
+  
+	  I'm creating a compareDNA2 function  in the factory function that instead of 
+	  logging to the console,	returns an array like the one described above that we can
+	  push into an array for later analysis
+  */
+  function findRelatives(orgArray) {
+	  let orgArrayLength = orgArray.length;
+	  console.log(`orgArrayLength: ${orgArrayLength}`)
+  
+	  let matchPairs = [];
+	  //console.log(orgArray);
+	  
+	  /*
+		  I'm thinking a nested loop here - we start at index 0, comparing it to
+		  index 1 ... index n. Then we go to 1, compare it to 2 ... n. We can start
+		  the comparison at i + 1 as we already know how i and i-1 relate, and we
+		  don't want to compare i with itself.
+	  */
+	  console.log(`outer loop beginning`)
+	  for	(i = 0; i < orgArrayLength; i++) {
+		  
+		  console.log(` i: ${i}; specimen ${orgArray[i].specimenNum}`)
+		  console.log(`  inner loop beginning`)
+		  for (j = i + 1; j < orgArrayLength; j++) {
+			  console.log(`   i: ${i}, j: ${j}`);
+			  console.log(`   compare specimens ${orgArray[i].specimenNum} and ${orgArray[j].specimenNum}`);
+			  //orgArray[i].compareDNA(orgArray[j]);
+			  //console.log(orgArray[i].compareDNA2(orgArray[j]))
+			  //matchPairs.push(orgArray[i].compareDNA2(orgArray[j]));
+		  }
+		  console.log(`  inner loop completed`)
+	  }
+	  console.log(`outer loop completed`)
+  
+	  //console.log(matchPairs);
+	  /*
+		  Having built my array of comparisons, it's time to sort it.
+	  */
+  
+	  return;
+  
+  };
+  
+  
   // Tests
+  //let testArray = makeSurvivors(3);
+  //findRelatives(testArray);
+  
+  /*
   let DNA0 = mockUpStrand();
   let org0 = pAequorFactory(0, DNA0);
   console.log(org0);
